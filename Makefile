@@ -1,4 +1,4 @@
-MAKE?=mingw32-make
+#MAKE?=mingw32-make
 AR?=ar
 ARFLAGS?=rcs
 PATHSEP?=/
@@ -11,6 +11,8 @@ endif
 
 BUILDDIR?=$(BUILDROOT)$(PATHSEP)$(CC)
 BUILDPATH?=$(BUILDDIR)$(PATHSEP)
+
+INSTALL_ROOT?=$(BUILDPATH)
 
 ifeq ($(DEBUG),1)
 	export debug=-ggdb -Ddebug=1
@@ -33,27 +35,25 @@ ifeq ($(DEBUG),3)
 endif
 
 ifeq ($(OUTPUT),1)
-	export outimg=-Doutput=1
+	export outimg= -Doutput=1
 endif
 
-CFLAGS=-std=c11 -Wpedantic -pedantic-errors -Wall -Wextra -O1 $(debug) 
+CFLAGS=-std=c11 -Wpedantic -pedantic-errors -Wall -Wextra -O1 $(debug)
 #-ggdb
 #-pg for profiling 
-SRC=shape.c
 
-INCLUDEDIR=-I./../math/vec -I./../math/mat -I./../math/utils -I./../color -I.
+LIB?=-L/c/dev/lib
+INCLUDE?=-I/c/dev/include -I.
 
 LIBNAME=libshape.a
 OBJS=shape.o
 
+SRC?=shape.c
+
 TESTSRC=test_shape.c
 TESTBIN=test_shape.exe
 TESTLIB= -lshape -lcolor -lutilsmath -lmat -lvec  
-TESTLIBDIR=-L$(BUILDDIR) \
-		    -L./../color/$(BUILDDIR) \
-			-L./../math/utils/$(BUILDDIR) \
-			-L./../math/mat/$(BUILDDIR) \
-			-L./../math/vec/$(BUILDDIR)
+TESTLIBDIR=-L$(BUILDDIR) $(LIB)
 
 all: createdir $(BUILDPATH)$(LIBNAME) $(BUILDPATH)$(TESTBIN) test
 
@@ -61,10 +61,10 @@ $(BUILDPATH)$(LIBNAME): $(BUILDPATH)$(OBJS)
 	$(AR) $(ARFLAGS) $(BUILDPATH)$(LIBNAME) $(BUILDPATH)$(OBJS)
 
 $(BUILDPATH)$(OBJS):
-	$(CC) $(CFLAGS) -c $(SRC) -o $(BUILDPATH)$(OBJS) $(INCLUDEDIR)
+	$(CC) $(CFLAGS) -c $(SRC) -o $(BUILDPATH)$(OBJS) $(INCLUDE)
 	
 $(BUILDPATH)$(TESTBIN):
-	$(CC) $(CFLAGS) $(TESTSRC) -o $(BUILDPATH)$(TESTBIN) $(INCLUDEDIR) $(TESTLIBDIR) $(TESTLIB) $(debug)
+	$(CC) $(CFLAGS) $(TESTSRC) -o $(BUILDPATH)$(TESTBIN) $(INCLUDE) $(TESTLIBDIR) $(TESTLIB) $(debug)
 	
 .PHONY: createdir clean test
 
@@ -76,4 +76,10 @@ test:
 
 clean:
 	-rm -dr $(BUILDROOT)
+
+install:
+	mkdir -p $(INSTALL_ROOT)include
+	mkdir -p $(INSTALL_ROOT)lib
+	cp ./shape.h $(INSTALL_ROOT)include/shape.h
+	cp $(BUILDPATH)$(LIBNAME) $(INSTALL_ROOT)lib/$(LIBNAME)
 	
