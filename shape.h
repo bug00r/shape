@@ -17,9 +17,15 @@
 #include "utils_math.h"
 
 typedef struct {
+	vec3_t ndc;
+	vec3_t raster;
+} vertex_render_info_t;
+
+typedef struct {
 	vec3_t vec;
 	cRGB_t color;
 	vec2_t texCoord;
+	vertex_render_info_t info;
 } vertex_t;
 
 typedef struct {
