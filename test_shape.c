@@ -100,6 +100,33 @@ main() {
 	free_shape(copy_triangle);
 	free(triangle);
 	free(copy_triangle);
+
+	#if 0
+		// Test polygon
+	#endif
+
+	vec3_t points[12] = { {1.f, 1.f, .0f} , { 2.5f, 2.f, .0f}, { 4.f, 1.f, .0f}  , { 4.f, 3.f, .0f}, 
+						 {4.5f,1.5f, .0f}, { 3.f, 3.5f, .0f}, { 3.5f, 2.f, .0f}, { 2.f, 3.f, .0f},
+						 {1.5f,4.f, .0f}, { 1.5f, 2.f, .0f}, { 3.f, 0.5f, .0f}, { 2.0f, .5f, .0f}};
+	shape_t *polygon = create_shape_polygon3(points, 12);
+
+	#ifdef debug
+		debug_shape(polygon);
+	#endif
+
+	vec3_t *poly_vec3arr = shape_to_vec3ptr(polygon);
+
+	#ifdef debug
+		printf("printing converted shape\n");
+		for ( unsigned int cntVec = 0; cntVec < polygon->cntVertex; ++cntVec ) {
+			vec3_print(&poly_vec3arr[cntVec]);
+		}
+	#endif
+
+	free_shape(polygon);
+	free(polygon);
+	free(poly_vec3arr);
+
 	#ifdef debug
 		printf("End test shape\n");
 	#endif

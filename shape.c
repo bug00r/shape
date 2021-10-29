@@ -45,6 +45,11 @@ istriangle(const shape_t * shape){
 	return shape->cntVertex == 3;
 }
 
+bool 
+ispolygon(const shape_t * shape){
+	return shape->cntVertex > 3;
+}
+
 shape_t * 
 create_shape_point3(const vec3_t *p1){
 	shape_t * point = alloc_shape(1);
@@ -100,6 +105,23 @@ create_shape_triangle3(const vec3_t *p1, const vec3_t *p2, const vec3_t *p3){
 	color->g = 0.0f;
 	color->b = 1.0f;
 	return triangle;
+}
+
+shape_t * 
+create_shape_polygon3(const vec3_t *vecs, size_t cnt_vecs) {
+	shape_t * polygon = alloc_shape(cnt_vecs);
+	vertex_t ** vertices = polygon->vertices;
+
+	for( size_t curVec = 0; curVec < cnt_vecs; ++curVec ) {
+		vertices[curVec] = malloc(vertex_size);
+		vec3_copy_dest(&vertices[curVec]->vec, &vecs[curVec]);
+		cRGB_t * color = &vertices[curVec]->color;
+		color->r = 1.0f;
+		color->g = 0.0f;
+		color->b = 0.0f;
+	}
+
+	return polygon;
 }
 
 shape_t * 
@@ -196,4 +218,13 @@ debug_shape(const shape_t * shape){
 	for(unsigned int vertex = 0; vertex < shape->cntVertex; ++vertex){
 		vec3_print(&shape->vertices[vertex]->vec);
 	}
+}
+
+vec3_t * 
+shape_to_vec3ptr(const shape_t * shape) {
+	vec3_t *vecptr = malloc(shape->cntVertex * sizeof(vec3_t) );
+	for(unsigned int vertex = 0; vertex < shape->cntVertex; ++vertex){
+		vec3_copy_dest(&vecptr[vertex], &shape->vertices[vertex]->vec); 
+	}
+	return vecptr;
 }

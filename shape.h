@@ -68,6 +68,10 @@ bool isline(const shape_t * shape);
 #endif
 bool istriangle(const shape_t * shape);
 
+#if 0
+	//checks if shape is a point
+#endif
+bool ispolygon(const shape_t * shape);
 
 #if 0
 	/**
@@ -89,6 +93,13 @@ shape_t * create_shape_line3(const vec3_t *p1, const vec3_t *p2);
 	*/
 #endif
 shape_t * create_shape_triangle3(const vec3_t *p1, const vec3_t *p2, const vec3_t *p3);
+
+#if 0
+	/**
+		This function creates a polygon shape. You must free the memory by yourself.
+	*/
+#endif
+shape_t * create_shape_polygon3(const vec3_t *vecs, size_t cnt_vecs);
 
 #if 0
 	/**
@@ -132,5 +143,12 @@ void translate_shape(shape_t *shape, const float tx, const float ty, const float
 	 */
 #endif
 void debug_shape(const shape_t * shape);
+
+#if 0
+	/**
+		shows detailed shape info
+	 */
+#endif
+vec3_t * shape_to_vec3ptr(const shape_t * shape);
 
 #endif

@@ -59,7 +59,7 @@ SRC?=shape.c
 
 TESTSRC=test_shape.c
 TESTBIN=test_shape.exe
-TESTLIB= -lshape -lcolor -lutilsmath -lmat -lvec  
+TESTLIB= -lshape -lcolor -lutilsmath -lmat -lvec
 TESTLIBDIR=-L$(BUILDDIR) $(LIB)
 
 all: createdir $(BUILDPATH)$(LIBNAME) $(BUILDPATH)$(TESTBIN) test
