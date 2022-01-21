@@ -137,6 +137,8 @@ void scale_shape(shape_t *shape, const float scalex, const float scaley, const f
 #endif
 void translate_shape(shape_t *shape, const float tx, const float ty, const float tz );
 
+void shape_set_texture(shape_t *shape, unsigned int texID, vec2_t *texCoords);
+
 #if 0
 	/**
 		shows detailed shape info

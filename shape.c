@@ -212,6 +212,29 @@ translate_shape(shape_t *shape, const float tx, const float ty, const float tz )
 	}
 }
 
+void shape_set_texture(shape_t *shape, unsigned int texID, vec2_t *texCoords)
+{
+	vec2_t *vec;
+	vertex_t ** vertices = shape->vertices;
+	shape->texId = (float)texID;
+
+	switch(shape->cntVertex) {
+		case 3:
+			vec = &vertices[2]->texCoord;
+			vec->x = 0.f;
+			vec->y = 0.f;
+		case 2:
+			vec = &vertices[1]->texCoord;
+			vec->x = texCoords->x;
+			vec->y = texCoords->y;
+		case 1:
+			vec = &vertices[0]->texCoord;
+			vec->x = 0.f;
+			vec->y = texCoords->y;
+			break;
+	}
+}
+
 void 
 debug_shape(const shape_t * shape){
 	printf("cnt vertex: %i\n shape vertex:\n", shape->cntVertex);
