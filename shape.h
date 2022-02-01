@@ -14,7 +14,7 @@
 #include "vec.h"
 #include "mat.h"
 #include "color.h"
-#include "utils_math.h"
+#include "utilsmath.h"
 
 typedef struct {
 	vec3_t ndc;

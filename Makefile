@@ -45,33 +45,31 @@ ifeq ($(M32),1)
 	BIT_SUFFIX+=32
 endif
 
-CFLAGS+=-std=c11 -Wpedantic -pedantic-errors -Wall -Wextra $(debug)
+CFLAGS+=-std=c11 -Wimplicit-fallthrough=0 -Wpedantic -pedantic-errors -Wall -Wextra $(debug)
 #-ggdb
 #-pg for profiling 
 
-LIB?=-L/c/dev/lib$(BIT_SUFFIX)
 INCLUDE?=-I/c/dev/include -I.
 
-LIBNAME=libshape.a
-OBJS=shape.o
+NAME=shape
+LIBNAME=lib$(NAME).a
+LIB=$(BUILDPATH)$(LIBNAME)
+OBJS=$(BUILDPATH)$(NAME).o
 
-SRC?=shape.c
+TESTBIN=$(BUILDPATH)test_$(NAME).exe
+TESTLIB= -l$(NAME) -lcolor -lutilsmath -lmat -lvec
+TESTLIBDIR=-L$(BUILDDIR) -L/c/dev/lib$(BIT_SUFFIX)
 
-TESTSRC=test_shape.c
-TESTBIN=test_shape.exe
-TESTLIB= -lshape -lcolor -lutilsmath -lmat -lvec
-TESTLIBDIR=-L$(BUILDDIR) $(LIB)
+all: createdir $(LIB) $(TESTBIN)
 
-all: createdir $(BUILDPATH)$(LIBNAME) $(BUILDPATH)$(TESTBIN) test
+$(LIB): $(OBJS)
+	$(AR) $(ARFLAGS) $@ $^
 
-$(BUILDPATH)$(LIBNAME): $(BUILDPATH)$(OBJS)
-	$(AR) $(ARFLAGS) $(BUILDPATH)$(LIBNAME) $(BUILDPATH)$(OBJS)
-
-$(BUILDPATH)$(OBJS):
-	$(CC) $(CFLAGS) -c $(SRC) -o $(BUILDPATH)$(OBJS) $(INCLUDE)
+$(OBJS):
+	$(CC) $(CFLAGS) -c $(@F:.o=.c) -o $@ $(INCLUDE)
 	
-$(BUILDPATH)$(TESTBIN):
-	$(CC) $(CFLAGS) $(TESTSRC) -o $(BUILDPATH)$(TESTBIN) $(INCLUDE) $(TESTLIBDIR) $(TESTLIB) $(debug)
+$(TESTBIN):
+	$(CC) $(CFLAGS) $(@F:.exe=.c) -o $@ $(INCLUDE) $(TESTLIBDIR) $(TESTLIB)
 	
 .PHONY: createdir clean test
 
@@ -79,7 +77,7 @@ createdir:
 	mkdir -p $(BUILDDIR)
 
 test:
-	./$(BUILDPATH)$(TESTBIN)
+	./$(TESTBIN)
 
 clean:
 	-rm -dr $(BUILDROOT)
@@ -87,6 +85,6 @@ clean:
 install:
 	mkdir -p $(INSTALL_ROOT)include
 	mkdir -p $(INSTALL_ROOT)lib$(BIT_SUFFIX)
-	cp ./shape.h $(INSTALL_ROOT)include/shape.h
-	cp $(BUILDPATH)$(LIBNAME) $(INSTALL_ROOT)lib$(BIT_SUFFIX)/$(LIBNAME)
+	cp ./$(NAME).h $(INSTALL_ROOT)include$(PATHSEP)$(NAME).h
+	cp $(LIB) $(INSTALL_ROOT)lib$(BIT_SUFFIX)$(PATHSEP)$(LIBNAME)
 	
