@@ -1,7 +1,7 @@
 _CFLAGS:=$(CFLAGS)
-CFLAGS+=$(_CFLAGS)
+CFLAGS:=$(_CFLAGS)
 _LDFLAGS:=$(LDFLAGS)
-LDFLAGS+=$(_LDFLAGS)
+LDFLAGS:=$(_LDFLAGS)
 
 ARFLAGS?=rcs
 PATHSEP?=/
@@ -48,8 +48,6 @@ TESTBIN=$(BUILDPATH)test_$(NAME).exe
 LDFLAGS+=-L$(BUILDDIR) -L/c/dev/lib$(BIT_SUFFIX)
 LDFLAGS+= -l$(NAME) -lcolor -lutilsmath -lmat -lvec
 
-
-
 all: createdir $(LIB)
 
 $(LIB): $(OBJS)
@@ -58,7 +56,7 @@ $(LIB): $(OBJS)
 $(OBJS):
 	$(CC) $(CFLAGS) -c $(@F:.o=.c) -o $@
 	
-$(TESTBIN):
+$(TESTBIN): $(LIB)
 	$(CC) $(CFLAGS) $(@F:.exe=.c) -o $@ $(LDFLAGS)
 	
 .PHONY: createdir clean test
