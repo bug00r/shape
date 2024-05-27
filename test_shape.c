@@ -12,7 +12,7 @@ main() {
 		// Test shape allocation
 	#endif
 	
-	shape_t * shape1 = alloc_shape(3);
+	Shape * shape1 = alloc_shape(3);
 	assert(shape1->cntVertex == 3);
 	assert(shape1->cntVertex != 4);
 	free_shape(shape1);
@@ -20,8 +20,8 @@ main() {
 	#if 0
 		// Test point allocation
 	#endif
-	vec3_t pData = { 1.f, 2.f, 3.f };
-	shape_t * point = create_shape_point3(&pData);
+	Vec3 pData = { 1.f, 2.f, 3.f };
+	Shape * point = create_shape_point3(&pData);
 	
 	assert(point->cntVertex == 1);
 	assert(vec3_equals(&point->vertices[0]->vec, &pData));
@@ -34,9 +34,9 @@ main() {
 	#if 0
 		// Test line allocation
 	#endif
-	vec3_t lData = { 1.f, 2.f, 3.f };
-	vec3_t lData2 = { 4.f, 5.f, 6.f };
-	shape_t * line = create_shape_line3(&lData, &lData2);
+	Vec3 lData = { 1.f, 2.f, 3.f };
+	Vec3 lData2 = { 4.f, 5.f, 6.f };
+	Shape * line = create_shape_line3(&lData, &lData2);
 	
 	assert(line->cntVertex == 2);
 	assert(vec3_equals(&line->vertices[0]->vec, &lData));
@@ -53,10 +53,10 @@ main() {
 	#if 0
 		// Test triangle allocation
 	#endif
-	vec3_t tData = { 1.f, 2.f, 3.f };
-	vec3_t tData2 = { 4.f, 5.f, 6.f };
-	vec3_t tData3 = { 7.f, 8.f, 9.f };
-	shape_t * triangle = create_shape_triangle3(&tData, &tData2, &tData3);
+	Vec3 tData = { 1.f, 2.f, 3.f };
+	Vec3 tData2 = { 4.f, 5.f, 6.f };
+	Vec3 tData3 = { 7.f, 8.f, 9.f };
+	Shape * triangle = create_shape_triangle3(&tData, &tData2, &tData3);
 	
 	assert(triangle->cntVertex == 3);
 	assert(vec3_equals(&triangle->vertices[0]->vec, &tData));
@@ -76,7 +76,7 @@ main() {
 		// Test copy of triangle
 	#endif
 	
-	shape_t * copy_triangle = copy_triangle3(triangle);
+	Shape * copy_triangle = copy_triangle3(triangle);
 	
 	#ifdef debug
 		printf("t1 %p und t2 %p\n",triangle, copy_triangle);
@@ -105,16 +105,16 @@ main() {
 		// Test polygon
 	#endif
 
-	vec3_t points[12] = { {1.f, 1.f, .0f} , { 2.5f, 2.f, .0f}, { 4.f, 1.f, .0f}  , { 4.f, 3.f, .0f}, 
+	Vec3 points[12] = { {1.f, 1.f, .0f} , { 2.5f, 2.f, .0f}, { 4.f, 1.f, .0f}  , { 4.f, 3.f, .0f}, 
 						 {4.5f,1.5f, .0f}, { 3.f, 3.5f, .0f}, { 3.5f, 2.f, .0f}, { 2.f, 3.f, .0f},
 						 {1.5f,4.f, .0f}, { 1.5f, 2.f, .0f}, { 3.f, 0.5f, .0f}, { 2.0f, .5f, .0f}};
-	shape_t *polygon = create_shape_polygon3(points, 12);
+	Shape *polygon = create_shape_polygon3(points, 12);
 
 	#ifdef debug
 		debug_shape(polygon);
 	#endif
 
-	vec3_t *poly_vec3arr = shape_to_vec3ptr(polygon);
+	Vec3 *poly_vec3arr = shape_to_vec3ptr(polygon);
 
 	#ifdef debug
 		printf("printing converted shape\n");

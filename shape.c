@@ -1,27 +1,27 @@
 #include "shape.h"
 
-const size_t vertex_size = sizeof(vertex_t);
-const size_t shape_size = sizeof(shape_t);
-const size_t vertex_ptr_size = sizeof(vertex_t*);
-const size_t shape_ptr_size = sizeof(shape_t*);
+const size_t vertex_size = sizeof(Vertex);
+const size_t shape_size = sizeof(Shape);
+const size_t vertex_ptr_size = sizeof(Vertex*);
+const size_t shape_ptr_size = sizeof(Shape*);
 
-shape_t * 
+Shape * 
 alloc_shape(const unsigned int vertexcount){
-	shape_t * newshape = malloc(shape_size);
+	Shape * newshape = malloc(shape_size);
 	newshape->texId = -1;
 	newshape->cntVertex = vertexcount;
 	newshape->vertices = malloc(vertexcount * vertex_ptr_size);
 	for (unsigned int vtx = 0; vtx < newshape->cntVertex; ++vtx){
-		newshape->vertices[vtx] = NULL;//malloc(sizeof(vertex_t));
+		newshape->vertices[vtx] = NULL;//malloc(sizeof(Vertex));
 	}
 
 	return newshape;
 }
 
 void 
-free_shape(shape_t *shape){
+free_shape(Shape *shape){
 	for (unsigned int vtx = 0; vtx < shape->cntVertex; ++vtx){
-		vertex_t * curVertex = shape->vertices[vtx];
+		Vertex * curVertex = shape->vertices[vtx];
 		if(curVertex != NULL){
 			free(curVertex);
 		}
@@ -31,47 +31,47 @@ free_shape(shape_t *shape){
 }
 
 bool 
-ispoint(const shape_t * shape){
+ispoint(const Shape * shape){
 	return shape->cntVertex == 1;
 }
 
 bool 
-isline(const shape_t * shape){
+isline(const Shape * shape){
 	return shape->cntVertex == 2;
 }
 
 bool 
-istriangle(const shape_t * shape){
+istriangle(const Shape * shape){
 	return shape->cntVertex == 3;
 }
 
 bool 
-ispolygon(const shape_t * shape){
+ispolygon(const Shape * shape){
 	return shape->cntVertex > 3;
 }
 
-shape_t * 
-create_shape_point3(const vec3_t *p1){
-	shape_t * point = alloc_shape(1);
-	vertex_t ** vertices = point->vertices;
+Shape * 
+create_shape_point3(const Vec3 *p1){
+	Shape * point = alloc_shape(1);
+	Vertex ** vertices = point->vertices;
 	vertices[0] = malloc(vertex_size);
 	vec3_copy_dest(&vertices[0]->vec, p1);
-	cRGB_t * color = &vertices[0]->color;
+	ColorRGB * color = &vertices[0]->color;
 	color->r = 1.0f;
 	color->g = 0.0f;
 	color->b = 0.0f;
 	return point;
 }
 
-shape_t * 
-create_shape_line3(const vec3_t *p1, const vec3_t *p2){
-	shape_t * line = alloc_shape(2);
-	vertex_t ** vertices = line->vertices;
+Shape * 
+create_shape_line3(const Vec3 *p1, const Vec3 *p2){
+	Shape * line = alloc_shape(2);
+	Vertex ** vertices = line->vertices;
 	vertices[0] = malloc(vertex_size);
 	vertices[1] = malloc(vertex_size);
 	vec3_copy_dest(&vertices[0]->vec, p1);
 	vec3_copy_dest(&vertices[1]->vec, p2);
-	cRGB_t * color = &vertices[0]->color;
+	ColorRGB * color = &vertices[0]->color;
 	color->r = 1.0f;
 	color->g = 0.0f;
 	color->b = 0.0f;
@@ -82,17 +82,17 @@ create_shape_line3(const vec3_t *p1, const vec3_t *p2){
 	return line;
 }
 
-shape_t *
-create_shape_triangle3(const vec3_t *p1, const vec3_t *p2, const vec3_t *p3){
-	shape_t * triangle = alloc_shape(3);
-	vertex_t ** vertices = triangle->vertices;
+Shape *
+create_shape_triangle3(const Vec3 *p1, const Vec3 *p2, const Vec3 *p3){
+	Shape * triangle = alloc_shape(3);
+	Vertex ** vertices = triangle->vertices;
 	vertices[0] = malloc(vertex_size);
 	vertices[1] = malloc(vertex_size);
 	vertices[2] = malloc(vertex_size);
 	vec3_copy_dest(&vertices[0]->vec, p1);
 	vec3_copy_dest(&vertices[1]->vec, p2);
 	vec3_copy_dest(&vertices[2]->vec, p3);
-	cRGB_t * color = &vertices[0]->color; 
+	ColorRGB * color = &vertices[0]->color; 
 	color->r = 1.0f;
 	color->g = 0.0f;
 	color->b = 0.0f;
@@ -107,15 +107,15 @@ create_shape_triangle3(const vec3_t *p1, const vec3_t *p2, const vec3_t *p3){
 	return triangle;
 }
 
-shape_t * 
-create_shape_polygon3(const vec3_t *vecs, size_t cnt_vecs) {
-	shape_t * polygon = alloc_shape(cnt_vecs);
-	vertex_t ** vertices = polygon->vertices;
+Shape * 
+create_shape_polygon3(const Vec3 *vecs, size_t cnt_vecs) {
+	Shape * polygon = alloc_shape(cnt_vecs);
+	Vertex ** vertices = polygon->vertices;
 
 	for( size_t curVec = 0; curVec < cnt_vecs; ++curVec ) {
 		vertices[curVec] = malloc(vertex_size);
 		vec3_copy_dest(&vertices[curVec]->vec, &vecs[curVec]);
-		cRGB_t * color = &vertices[curVec]->color;
+		ColorRGB * color = &vertices[curVec]->color;
 		color->r = 1.0f;
 		color->g = 0.0f;
 		color->b = 0.0f;
@@ -124,9 +124,9 @@ create_shape_polygon3(const vec3_t *vecs, size_t cnt_vecs) {
 	return polygon;
 }
 
-shape_t * 
-copy_triangle3(const shape_t *t1){
-	shape_t * copy = NULL;
+Shape * 
+copy_triangle3(const Shape *t1){
+	Shape * copy = NULL;
 	if ( t1->cntVertex == 3 ) {
 		copy = create_shape_triangle3(&t1->vertices[0]->vec, &t1->vertices[1]->vec, &t1->vertices[2]->vec);
 		crgb_crgb_copy(&copy->vertices[0]->color, &t1->vertices[0]->color);
@@ -137,8 +137,8 @@ copy_triangle3(const shape_t *t1){
 }
 
 void 
-set_shape_color(shape_t *shape, const cRGB_t * color){
-	vertex_t ** vertices = shape->vertices;
+set_shape_color(Shape *shape, const ColorRGB * color){
+	Vertex ** vertices = shape->vertices;
 	switch(shape->cntVertex) {
 		case 3:
 			crgb_crgb_copy(&vertices[2]->color, color);
@@ -151,8 +151,8 @@ set_shape_color(shape_t *shape, const cRGB_t * color){
 }
 
 void 
-mat_mul_shape(shape_t *shape, const mat3_t * matrix){
-	vertex_t ** vertices = shape->vertices;
+mat_mul_shape(Shape *shape, const Mat3 * matrix){
+	Vertex ** vertices = shape->vertices;
 	switch(shape->cntVertex) {
 		case 3:
 			mat_vec_mul_3(matrix, &vertices[2]->vec);
@@ -165,9 +165,9 @@ mat_mul_shape(shape_t *shape, const mat3_t * matrix){
 }
 
 void 
-scale_shape(shape_t *shape, const float scalex, const float scaley, const float scalez ){
-	vec3_t *vec;
-	vertex_t ** vertices = shape->vertices;
+scale_shape(Shape *shape, const float scalex, const float scaley, const float scalez ){
+	Vec3 *vec;
+	Vertex ** vertices = shape->vertices;
 	switch(shape->cntVertex) {
 		case 3:
 			vec = &vertices[2]->vec;
@@ -189,9 +189,9 @@ scale_shape(shape_t *shape, const float scalex, const float scaley, const float 
 }
 
 void 
-translate_shape(shape_t *shape, const float tx, const float ty, const float tz ){
-	vec3_t *vec;
-	vertex_t ** vertices = shape->vertices;
+translate_shape(Shape *shape, const float tx, const float ty, const float tz ){
+	Vec3 *vec;
+	Vertex ** vertices = shape->vertices;
 	switch(shape->cntVertex) {
 		case 3:
 			vec = &vertices[2]->vec;
@@ -212,11 +212,11 @@ translate_shape(shape_t *shape, const float tx, const float ty, const float tz )
 	}
 }
 
-void shape_set_texture(shape_t *shape, unsigned int texID, const vec2_t *vertex_1_texCoords,
-					   const vec2_t *vertex_2_texCoords, const vec2_t *vertex_3_texCoords)
+void shape_set_texture(Shape *shape, unsigned int texID, const Vec2 *vertex_1_texCoords,
+					   const Vec2 *vertex_2_texCoords, const Vec2 *vertex_3_texCoords)
 {
-	vec2_t *vec;
-	vertex_t ** vertices = shape->vertices;
+	Vec2 *vec;
+	Vertex ** vertices = shape->vertices;
 	shape->texId = (float)texID;
 
 	switch(shape->cntVertex) {
@@ -237,16 +237,16 @@ void shape_set_texture(shape_t *shape, unsigned int texID, const vec2_t *vertex_
 }
 
 void 
-debug_shape(const shape_t * shape){
+debug_shape(const Shape * shape){
 	printf("cnt vertex: %i\n shape vertex:\n", shape->cntVertex);
 	for(unsigned int vertex = 0; vertex < shape->cntVertex; ++vertex){
 		vec3_print(&shape->vertices[vertex]->vec);
 	}
 }
 
-vec3_t * 
-shape_to_vec3ptr(const shape_t * shape) {
-	vec3_t *vecptr = malloc(shape->cntVertex * sizeof(vec3_t) );
+Vec3 * 
+shape_to_vec3ptr(const Shape * shape) {
+	Vec3 *vecptr = malloc(shape->cntVertex * sizeof(Vec3) );
 	for(unsigned int vertex = 0; vertex < shape->cntVertex; ++vertex){
 		vec3_copy_dest(&vecptr[vertex], &shape->vertices[vertex]->vec); 
 	}

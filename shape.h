@@ -17,22 +17,22 @@
 #include "utilsmath.h"
 
 typedef struct {
-	vec3_t ndc;
-	vec3_t raster;
-} vertex_render_info_t;
+	Vec3 ndc;
+	Vec3 raster;
+} VertexRenderInfo;
 
 typedef struct {
-	vec3_t vec;
-	cRGB_t color;
-	vec2_t texCoord;
-	vertex_render_info_t info;
-} vertex_t;
+	Vec3 vec;
+	ColorRGB color;
+	Vec2 texCoord;
+	VertexRenderInfo info;
+} Vertex;
 
 typedef struct {
 	int texId;
 	unsigned int cntVertex;
-	vertex_t ** vertices;
-} shape_t;
+	Vertex ** vertices;
+} Shape;
 
 extern const size_t vertex_size;
 extern const size_t vertex_ptr_size;
@@ -44,62 +44,62 @@ extern const size_t shape_ptr_size;
 		This function allocates and init shape instance with given vertexcount.
 	*/
 #endif
-shape_t * alloc_shape(const unsigned int vertexcount);
+Shape * alloc_shape(const unsigned int vertexcount);
 
 #if 0
 	/**
 		This function frees all memory from using shape.
 	*/
 #endif
-void free_shape(shape_t *shape);
+void free_shape(Shape *shape);
 
 #if 0
 	//checks if shape is a point
 #endif
-bool ispoint(const shape_t * shape);
+bool ispoint(const Shape * shape);
 
 #if 0
 	//checks if shape is a line
 #endif
-bool isline(const shape_t * shape);
+bool isline(const Shape * shape);
 
 #if 0
 	//checks if shape is a point
 #endif
-bool istriangle(const shape_t * shape);
+bool istriangle(const Shape * shape);
 
 #if 0
 	//checks if shape is a point
 #endif
-bool ispolygon(const shape_t * shape);
+bool ispolygon(const Shape * shape);
 
 #if 0
 	/**
 		This function creates a point "shape". You must free the memory by yourself.
 	*/
 #endif
-shape_t * create_shape_point3(const vec3_t *p1);
+Shape * create_shape_point3(const Vec3 *p1);
 
 #if 0
 	/**
 		This function creates a line shape. You must free the memory by yourself.
 	*/
 #endif
-shape_t * create_shape_line3(const vec3_t *p1, const vec3_t *p2);
+Shape * create_shape_line3(const Vec3 *p1, const Vec3 *p2);
 
 #if 0
 	/**
 		This function creates a triangle shape. You must free the memory by yourself.
 	*/
 #endif
-shape_t * create_shape_triangle3(const vec3_t *p1, const vec3_t *p2, const vec3_t *p3);
+Shape * create_shape_triangle3(const Vec3 *p1, const Vec3 *p2, const Vec3 *p3);
 
 #if 0
 	/**
 		This function creates a polygon shape. You must free the memory by yourself.
 	*/
 #endif
-shape_t * create_shape_polygon3(const vec3_t *vecs, size_t cnt_vecs);
+Shape * create_shape_polygon3(const Vec3 *vecs, size_t cnt_vecs);
 
 #if 0
 	/**
@@ -107,51 +107,51 @@ shape_t * create_shape_polygon3(const vec3_t *vecs, size_t cnt_vecs);
 		Returns NULL if shape not a type of triangle
 	*/
 #endif
-shape_t * copy_triangle3(const shape_t *t1);
+Shape * copy_triangle3(const Shape *t1);
 
 #if 0
 	/**
 		set all vertices from shape to color
 	*/
 #endif
-void set_shape_color(shape_t *t1, const cRGB_t * color);
+void set_shape_color(Shape *t1, const ColorRGB * color);
 
 #if 0
 	/**
 		multiplies every vertex coords with given matrix like transform or roation one
 	*/
 #endif
-void mat_mul_shape(shape_t *shape, const mat3_t * matrix);
+void mat_mul_shape(Shape *shape, const Mat3 * matrix);
 
 #if 0
 	/**
 		scales shape
 	*/
 #endif
-void scale_shape(shape_t *shape, const float scalex, const float scaley, const float scalez );
+void scale_shape(Shape *shape, const float scalex, const float scaley, const float scalez );
 
 #if 0
 	/**
 		translate shape
 	*/
 #endif
-void translate_shape(shape_t *shape, const float tx, const float ty, const float tz );
+void translate_shape(Shape *shape, const float tx, const float ty, const float tz );
 
-void shape_set_texture(shape_t *shape, unsigned int texID, const vec2_t *vertex_1_texCoords,
-					   const vec2_t *vertex_2_texCoords, const vec2_t *vertex_3_texCoords);
-
-#if 0
-	/**
-		shows detailed shape info
-	 */
-#endif
-void debug_shape(const shape_t * shape);
+void shape_set_texture(Shape *shape, unsigned int texID, const Vec2 *vertex_1_texCoords,
+					   const Vec2 *vertex_2_texCoords, const Vec2 *vertex_3_texCoords);
 
 #if 0
 	/**
 		shows detailed shape info
 	 */
 #endif
-vec3_t * shape_to_vec3ptr(const shape_t * shape);
+void debug_shape(const Shape * shape);
+
+#if 0
+	/**
+		shows detailed shape info
+	 */
+#endif
+Vec3 * shape_to_vec3ptr(const Shape * shape);
 
 #endif
