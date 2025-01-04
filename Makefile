@@ -49,6 +49,16 @@ TESTBIN=$(BUILDPATH)test_$(NAME).exe
 override LDFLAGS+=-L$(BUILDDIR) -L/c/dev/lib$(BIT_SUFFIX)
 override LDFLAGS+= -l$(NAME) -lcolor -lutilsmath -lmat -lvec
 
+UNAME_S := $(shell uname -s)
+
+ifeq ($(OS), Windows_NT)
+	#nothing yet
+endif
+
+ifeq ($(UNAME_S), Linux) 
+	override LDFLAGS+=-lm
+endif
+
 all: createdir $(LIB)
 
 $(LIB): $(OBJS)
